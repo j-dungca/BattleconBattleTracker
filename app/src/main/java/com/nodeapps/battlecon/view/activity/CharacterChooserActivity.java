@@ -1,6 +1,5 @@
 package com.nodeapps.battlecon.view.activity;
 
-import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -16,7 +15,7 @@ import com.nodeapps.battlecon.view.adapter.CharacterChooserAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import viewmodel.CharacterChooserViewModel;
+import com.nodeapps.battlecon.viewmodel.CharacterChooserViewModel;
 
 public class CharacterChooserActivity extends AppCompatActivity {
 

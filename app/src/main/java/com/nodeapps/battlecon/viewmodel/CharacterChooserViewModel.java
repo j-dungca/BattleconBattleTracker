@@ -1,4 +1,4 @@
-package viewmodel;
+package com.nodeapps.battlecon.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

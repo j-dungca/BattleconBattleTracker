@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.nodeapps.battlecon.R;
 import com.nodeapps.battlecon.view.holder.CharacterChooserViewHolder;
 
-import viewmodel.CharacterChooserViewModel;
+import com.nodeapps.battlecon.viewmodel.CharacterChooserViewModel;
 
 public class CharacterChooserAdapter extends RecyclerView.Adapter {
     private String[] data;

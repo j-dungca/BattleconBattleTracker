@@ -7,19 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nodeapps.battlecon.R;
+import com.nodeapps.battlecon.database.model.CharacterModel;
 import com.nodeapps.battlecon.view.holder.CharacterChooserViewHolder;
 
 import com.nodeapps.battlecon.viewmodel.CharacterChooserViewModel;
 
+import java.util.List;
+
 public class CharacterChooserAdapter extends RecyclerView.Adapter {
-    private String[] data;
+    private List<CharacterModel> data;
     private CharacterChooserViewModel characterChooserViewModel;
 
-    public CharacterChooserAdapter(String[] data) {
-        this.data = data;
-    }
-
-    public CharacterChooserAdapter(String[] data, CharacterChooserViewModel characterChooserViewModel) {
+    public CharacterChooserAdapter(List<CharacterModel> data, CharacterChooserViewModel characterChooserViewModel) {
         this.data = data;
         this.characterChooserViewModel = characterChooserViewModel;
     }
@@ -35,12 +34,12 @@ public class CharacterChooserAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        ((CharacterChooserViewHolder)viewHolder).setCharacterId(data[position]);
-        viewHolder.itemView.setOnClickListener(view -> characterChooserViewModel.setChosenCharacter(data[position]));
+        ((CharacterChooserViewHolder)viewHolder).setCharacterModel(data.get(position));
+        viewHolder.itemView.setOnClickListener(view -> characterChooserViewModel.setChosenCharacter(data.get(position).characterName));
     }
 
     @Override
     public int getItemCount() {
-        return data.length;
+        return data.size();
     }
 }

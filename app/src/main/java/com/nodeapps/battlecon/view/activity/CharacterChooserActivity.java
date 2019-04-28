@@ -7,14 +7,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nodeapps.battlecon.R;
+import com.nodeapps.battlecon.database.RosterDataSource;
+import com.nodeapps.battlecon.database.RosterDatabase;
 import com.nodeapps.battlecon.view.adapter.CharacterChooserAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+
 import com.nodeapps.battlecon.viewmodel.CharacterChooserViewModel;
 
 public class CharacterChooserActivity extends AppCompatActivity {
@@ -30,6 +38,10 @@ public class CharacterChooserActivity extends AppCompatActivity {
     RecyclerView.Adapter characterChooserAdapter;
     CharacterChooserViewModel characterChooserViewModel;
 
+    RosterDataSource rosterDataSource;
+
+    private final CompositeDisposable mDisposable = new CompositeDisposable();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +55,12 @@ public class CharacterChooserActivity extends AppCompatActivity {
         characterChooserViewModel = ViewModelProviders.of(this).get(CharacterChooserViewModel.class);
         characterChooserViewModel.getChosenCharacter().observe(this, nameObserver);
 
+        // Initialize Database/Room
+        RosterDatabase.getInstance(getApplicationContext());
+        rosterDataSource = new RosterDataSource(
+                RosterDatabase.getInstance(getApplicationContext()).characterDao(),
+                RosterDatabase.getInstance(getApplicationContext()).setDao());
+
         init();
         initRecyclerView(this);
 
@@ -51,9 +69,15 @@ public class CharacterChooserActivity extends AppCompatActivity {
     private void initRecyclerView(Context context) {
         characterChooserRecyclerView.setHasFixedSize(true);
         characterChooserLayoutManager = new GridLayoutManager(this,3);
-        characterChooserAdapter = new CharacterChooserAdapter(DEBUG_CHARACTERS, characterChooserViewModel);
-        characterChooserRecyclerView.setLayoutManager(characterChooserLayoutManager);
-        characterChooserRecyclerView.setAdapter(characterChooserAdapter);
+        mDisposable.add(rosterDataSource.getCharacterModels(1)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(characterModels -> {
+                    characterChooserAdapter = new CharacterChooserAdapter(
+                            characterModels, characterChooserViewModel);
+                    characterChooserRecyclerView.setLayoutManager(characterChooserLayoutManager);
+                    characterChooserRecyclerView.setAdapter(characterChooserAdapter);
+                }));
     }
 
     private void init() {

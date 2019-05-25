@@ -40,7 +40,7 @@ public class CharacterChooserActivity extends AppCompatActivity {
 
     RosterDataSource rosterDataSource;
 
-    private final CompositeDisposable mDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +68,8 @@ public class CharacterChooserActivity extends AppCompatActivity {
 
     private void initRecyclerView(Context context) {
         characterChooserRecyclerView.setHasFixedSize(true);
-        characterChooserLayoutManager = new GridLayoutManager(this,3);
-        mDisposable.add(rosterDataSource.getCharacterModels(1)
+        characterChooserLayoutManager = new GridLayoutManager(context,3);
+        compositeDisposable.add(rosterDataSource.getCharacterModels(1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(characterModels -> {
@@ -89,5 +89,12 @@ public class CharacterChooserActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        compositeDisposable.clear();
     }
 }

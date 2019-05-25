@@ -9,7 +9,7 @@ import com.nodeapps.battlecon.database.model.CharacterModel;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
+import io.reactivex.Observable;
 
 @Dao
 public interface CharacterDao {
@@ -17,7 +17,7 @@ public interface CharacterDao {
     List<CharacterModel> getAll();
 
     @Query("SELECT * FROM charactermodel WHERE set_id IS (:setId)")
-    Flowable<List<CharacterModel>> getAllBySetId(int setId);
+    Observable<List<CharacterModel>> getAllBySetId(int setId);
 
     @Insert
     void insertAll(CharacterModel... users);

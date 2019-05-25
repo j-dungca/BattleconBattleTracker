@@ -6,7 +6,7 @@ import com.nodeapps.battlecon.database.model.CharacterModel;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
+import io.reactivex.Observable;
 
 public class RosterDataSource {
 
@@ -18,7 +18,7 @@ public class RosterDataSource {
         this.setDao = setDao;
     }
 
-    public Flowable<List<CharacterModel>> getCharacterModels(int setId) {
+    public Observable<List<CharacterModel>> getCharacterModels(int setId) {
         return characterDao.getAllBySetId(setId);
     }
 }
